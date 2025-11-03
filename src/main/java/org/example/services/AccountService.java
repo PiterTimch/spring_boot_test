@@ -12,7 +12,7 @@ public class AccountService {
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public boolean registerUser(String username, String password) {
+    public boolean registerUser(String username, String password, String imageFilename) {
         if (userRepository.existsByUsername(username)) {
             return false;
         }
@@ -20,6 +20,7 @@ public class AccountService {
         UserEntity user = new UserEntity();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
+        user.setImage(imageFilename);
 
         userRepository.save(user);
         return true;
