@@ -6,6 +6,8 @@ import org.example.repository.IUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -24,5 +26,9 @@ public class AccountService {
 
         userRepository.save(user);
         return true;
+    }
+
+    public List<UserEntity> GetAllUsers() {
+        return userRepository.findAll();
     }
 }

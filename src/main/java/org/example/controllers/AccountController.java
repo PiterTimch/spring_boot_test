@@ -29,6 +29,12 @@ public class AccountController {
         return "account/register";
     }
 
+    @GetMapping("/users")
+    public String listUsers(Model model) {
+        model.addAttribute("users", accountService.GetAllUsers());
+        return "account/users";
+    }
+
     @PostMapping("/register")
     public String registerUser(@RequestParam String username,
                                @RequestParam String password,
@@ -63,7 +69,6 @@ public class AccountController {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
             model.addAttribute("message", "Помилка при збереженні зображення!");
         }
 
