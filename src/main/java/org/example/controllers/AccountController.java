@@ -46,4 +46,9 @@ public class AccountController {
         return "account/register";
     }
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "account/login";
+    }
+
 }
