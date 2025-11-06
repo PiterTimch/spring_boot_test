@@ -90,6 +90,10 @@
     </dependencies>
 
     <build>
+        <finalName>
+            java-web-mvc
+        </finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
