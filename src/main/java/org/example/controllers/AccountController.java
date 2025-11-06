@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.example.services.AccountService;
 import org.example.services.FileService;
@@ -30,10 +31,11 @@ public class AccountController {
     public String registerUser(@RequestParam String username,
                                @RequestParam String password,
                                @RequestParam(required = false) MultipartFile imageFile,
+                               HttpServletRequest request,
                                Model model) {
         String fileName = fileService.load(imageFile);
 
-        boolean success = accountService.registerUser(username, password, fileName);
+        boolean success = accountService.registerUser(username, password, fileName, request);
 
         if (success) {
             model.addAttribute("message", "Реєстрація успішна!");
