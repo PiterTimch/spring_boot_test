@@ -1,5 +1,6 @@
 package org.example.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,11 +11,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    @Value("${upload.dir}")
+    private String uploadDir;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/", "/css/**", "/uploads/**").permitAll()
+                        .requestMatchers("/register", "/", "/css/**", "/"+uploadDir+"/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

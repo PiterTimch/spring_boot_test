@@ -24,7 +24,7 @@
             </div>
 
             <div class="flex gap-4 items-center" sec:authorize="isAuthenticated()">
-                <img th:src="@{'/uploads/medium/' + ${#authentication.principal.image}}"
+                <img th:src="@{'/'+${uploadDir}+'/medium/'+${#authentication.principal.image}}"
                      alt="Фото профілю"
                      class="w-10 h-10 rounded-full border border-white shadow-md"/>
 
