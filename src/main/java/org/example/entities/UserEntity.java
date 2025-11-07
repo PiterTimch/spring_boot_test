@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import jakarta.validation.constraints.Email;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +22,10 @@ public class UserEntity implements UserDetails {
 
     @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(unique = true, nullable = false)
+    @Email(message = "Invalid email")
+    private String email;
 
     @Column(nullable = true, length = 200)
     private String image;

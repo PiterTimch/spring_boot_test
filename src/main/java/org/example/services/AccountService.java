@@ -3,6 +3,7 @@ package org.example.services;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.data.data_transfer_objects.RegisterUserDTO;
 import org.example.entities.RoleEntity;
 import org.example.entities.UserEntity;
 import org.example.repository.*;
@@ -24,16 +25,20 @@ public class AccountService {
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
+    private final FileService fileService;
 
-    public boolean registerUser(String username, String password, String imageFilename, HttpServletRequest request) {
-        if (userRepository.existsByUsername(username)) {
+    public boolean registerUser(RegisterUserDTO dto, HttpServletRequest request) {
+        if (userRepository.existsByUsername(dto.getUsername())) {
             return false;
         }
 
+        String fileName = fileService.load(dto.getImageFile());
+
         UserEntity user = new UserEntity();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setImage(imageFilename);
+        user.setUsername(dto.getUsername());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setImage(fileName);
+        user.setEmail(dto.getEmail());
 
         Optional<RoleEntity> userRoleOpt = roleRepository.findByName("User");
 

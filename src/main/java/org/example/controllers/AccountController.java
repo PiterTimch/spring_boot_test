@@ -1,11 +1,14 @@
 package org.example.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.data.data_transfer_objects.RegisterUserDTO;
 import org.example.services.AccountService;
 import org.example.services.FileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,10 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountController {
 
     private final AccountService accountService;
-    private final FileService fileService;
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model) {
+        model.addAttribute("registerUserDTO", new RegisterUserDTO());
         return "account/register";
     }
 
@@ -28,24 +31,25 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username,
-                               @RequestParam String password,
-                               @RequestParam(required = false) MultipartFile imageFile,
+    public String registerUser(@Valid @ModelAttribute RegisterUserDTO form,
+                               BindingResult bindingResult,
                                HttpServletRequest request,
                                Model model) {
-        String fileName = fileService.load(imageFile);
 
-        boolean success = accountService.registerUser(username, password, fileName, request);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("message", "Перевірте правильність введених даних");
+            return "account/register";
+        }
+
+        boolean success = accountService.registerUser(form, request);
 
         if (success) {
             model.addAttribute("message", "Реєстрація успішна!");
-
             return "redirect:/users";
         } else {
-            model.addAttribute("message", "Користувач із таким іменем вже існує.");
+            model.addAttribute("message", "Користувач із таким іменем або email вже існує.");
+            return "account/register";
         }
-
-        return "account/register";
     }
 
     @GetMapping("/login")
