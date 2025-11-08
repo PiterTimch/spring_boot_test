@@ -27,9 +27,6 @@ public class AccountService {
     private final IRoleRepository roleRepository;
     private final FileService fileService;
 
-    @Value("${site.url}")
-    private String siteUrl;
-
     public boolean registerUser(RegisterUserDTO dto, HttpServletRequest request) {
         if (userRepository.existsByUsername(dto.getUsername())) {
             return false;
@@ -70,7 +67,7 @@ public class AccountService {
         return userRepository.findAll();
     }
 
-    public boolean forgotPassword(ForgotPasswordDTO dto) {
+    public boolean forgotPassword(ForgotPasswordDTO dto, HttpServletRequest request) {
         Optional<UserEntity> userOpt = userRepository.findByEmail(dto.getEmail());
         if (userOpt.isEmpty()) {
             return false;
@@ -81,6 +78,8 @@ public class AccountService {
         String token = UUID.randomUUID().toString();
         user.setResetPasswordToken(token);
         userRepository.save(user);
+
+        String siteUrl = getSiteUrl(request);
 
         String resetLink = siteUrl + "/reset-password?token=" + token;
 
@@ -123,6 +122,24 @@ public class AccountService {
         }
 
         return sent;
+    }
+
+    private String getSiteUrl(HttpServletRequest request) {
+        String scheme = request.getScheme();             // http або https
+        String serverName = request.getServerName();     // localhost або myapp.com
+        int serverPort = request.getServerPort();        // 8080 або 443
+        String contextPath = request.getContextPath();   // якщо додаток не в корені
+
+        StringBuilder url = new StringBuilder();
+        url.append(scheme).append("://").append(serverName);
+
+        if ((scheme.equals("http") && serverPort != 80) ||
+                (scheme.equals("https") && serverPort != 443)) {
+            url.append(":").append(serverPort);
+        }
+
+        url.append(contextPath);
+        return url.toString();
     }
 
 

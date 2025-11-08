@@ -7,12 +7,10 @@ import org.example.data.data_transfer_objects.ForgotPasswordDTO;
 import org.example.data.data_transfer_objects.RegisterUserDTO;
 import org.example.data.data_transfer_objects.ResetPasswordDTO;
 import org.example.services.AccountService;
-import org.example.services.FileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -70,13 +68,14 @@ public class AccountController {
     public String forgotPasswordSubmit(
             @Valid @ModelAttribute ForgotPasswordDTO forgotPasswordDTO,
             BindingResult result,
-            Model model) {
+            Model model,
+            HttpServletRequest request) {
 
         if (result.hasErrors()) {
             return "account/forgot-password";
         }
 
-        boolean sent = accountService.forgotPassword(forgotPasswordDTO);
+        boolean sent = accountService.forgotPassword(forgotPasswordDTO, request);
         if (sent) {
             return "account/forgot-password-success";
         } else {
