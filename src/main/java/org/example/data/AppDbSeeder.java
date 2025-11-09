@@ -2,7 +2,7 @@ package org.example.data;
 
 import lombok.RequiredArgsConstructor;
 import org.example.data.constants.RolesConstants;
-import org.example.entities.RoleEntity;
+import org.example.entities.account.RoleEntity;
 import org.example.repository.IRoleRepository;
 import org.springframework.stereotype.Component;
 

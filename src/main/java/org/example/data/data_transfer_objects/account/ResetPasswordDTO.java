@@ -1,4 +1,4 @@
-package org.example.data.data_transfer_objects;
+package org.example.data.data_transfer_objects.account;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

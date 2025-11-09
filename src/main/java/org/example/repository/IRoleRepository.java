@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.entities.RoleEntity;
+import org.example.entities.account.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
