@@ -6,10 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CategoryDTO {
-    @NotBlank(message = "Ім'я обов'язкове")
+public class CategoryItemDTO {
+    private Long id;
+
     private String name;
 
-    @NotBlank(message = "Slug обов'язковий")
     private String slug;
 }

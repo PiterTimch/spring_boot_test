@@ -4,37 +4,28 @@ import org.example.data.data_transfer_objects.product.ProductCreateDTO;
 import org.example.data.data_transfer_objects.product.ProductItemDTO;
 import org.example.entities.product.CategoryEntity;
 import org.example.entities.product.ProductEntity;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
-public class ProductMapper {
+public interface ProductMapper {
 
-    public ProductItemDTO toDTO(ProductEntity entity) {
-        if (entity == null) return null;
+    @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "categoryName")
+    ProductItemDTO toDTO(ProductEntity entity);
 
-        ProductItemDTO dto = new ProductItemDTO();
-        dto.setName(entity.getName());
-        dto.setSlug(entity.getSlug());
-        dto.setDescription(entity.getDescription());
-        dto.setImage(entity.getImage());
-        dto.setDeleted(entity.isDeleted());
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "image", ignore = true) // встановимо нижче
+    @Mapping(target = "deleted", constant = "false")
+    ProductEntity fromCreateDTO(ProductCreateDTO dto,
+                                @Context CategoryEntity category,
+                                @Context String imageFileName);
 
-        if (entity.getCategory() != null) {
-            dto.setCategoryId(entity.getCategory().getId());
-            dto.setCategoryName(entity.getCategory().getName());
-        }
-
-        return dto;
-    }
-
-    public ProductEntity fromCreateDTO(ProductCreateDTO dto, CategoryEntity category, String imageFileName) {
-        ProductEntity entity = new ProductEntity();
-        entity.setName(dto.getName());
-        entity.setSlug(dto.getSlug());
-        entity.setDescription(dto.getDescription());
+    @AfterMapping
+    default void setExtraFields(@MappingTarget ProductEntity entity,
+                                @Context CategoryEntity category,
+                                @Context String imageFileName) {
         entity.setCategory(category);
         entity.setImage(imageFileName);
-        entity.setDeleted(false);
-        return entity;
     }
 }

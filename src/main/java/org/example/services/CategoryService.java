@@ -1,7 +1,8 @@
 package org.example.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.data.data_transfer_objects.product.CategoryDTO;
+import org.example.data.data_transfer_objects.product.CategoryCreateDTO;
+import org.example.data.data_transfer_objects.product.CategoryItemDTO;
 import org.example.data.mappers.CategoryMapper;
 import org.example.entities.product.CategoryEntity;
 import org.example.repository.ICategoryRepository;
@@ -20,27 +21,25 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Transactional
-    public CategoryDTO create(CategoryDTO dto) {
+    public CategoryItemDTO create(CategoryCreateDTO dto) {
         if (categoryRepository.existsBySlug(dto.getSlug())) {
             throw new IllegalArgumentException("Категорія зі slug '" + dto.getSlug() + "' вже існує");
         }
 
-        CategoryEntity entity = new CategoryEntity();
-        entity.setName(dto.getName());
-        entity.setSlug(dto.getSlug());
+        CategoryEntity entity = categoryMapper.fromCreateDTO(dto);
 
         CategoryEntity saved = categoryRepository.save(entity);
         return categoryMapper.toDto(saved);
     }
 
-    public List<CategoryDTO> getAll() {
+    public List<CategoryItemDTO> getAll() {
         return categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public CategoryDTO getBySlug(String slug) {
+    public CategoryItemDTO getBySlug(String slug) {
         CategoryEntity entity = categoryRepository.findBySlug(slug)
                 .orElseThrow(() -> new IllegalArgumentException("Категорію не знайдено: " + slug));
         return categoryMapper.toDto(entity);
