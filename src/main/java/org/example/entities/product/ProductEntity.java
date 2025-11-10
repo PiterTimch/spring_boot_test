@@ -4,13 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
-@Table(name = "categories")
-public class CategoryEntity {
+@Table(name = "products")
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,8 +20,15 @@ public class CategoryEntity {
     private String slug;
 
     @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = true, length = 200)
+    private String image;
+
+    @Column(nullable = false)
     private boolean isDeleted;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductEntity> products;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryEntity category;
 }

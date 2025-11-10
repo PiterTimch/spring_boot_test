@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.data.data_transfer_objects.product.CategoryDTO;
 import org.example.data.mappers.CategoryMapper;
 import org.example.entities.product.CategoryEntity;
-import org.example.repository.CategoryRepository;
+import org.example.repository.ICategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
+    private final ICategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
     @Transactional
