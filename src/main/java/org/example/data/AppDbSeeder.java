@@ -83,48 +83,51 @@ public class AppDbSeeder {
     }
 
     private void seedProducts() {
-        int targetCount = 50;
+        if (productService.getAll().isEmpty()) {
+            int targetCount = 50;
 
-        var categories = categoryService.getAll();
-        if (categories.isEmpty()) {
-            System.out.println("Пропускаю продукти — немає категорій.");
-            return;
-        }
-
-        long existingCount = categoryService.getAll().size();
-        if (existingCount >= targetCount) {
-            System.out.println("Продукти вже існують, сід пропущено.");
-            return;
-        }
-
-        System.out.println("Починаю створювати " + targetCount + " продуктів...");
-
-        for (int i = 0; i < targetCount; i++) {
-            try {
-                String name = faker.commerce().productName();
-                String slug = slugify.slugify(name);
-                String description = faker.lorem().sentence(10);
-
-                var category = categories.get(random.nextInt(categories.size()));
-
-                var dto = new org.example.data.data_transfer_objects.product.ProductCreateDTO();
-                dto.setName(name);
-                dto.setSlug(slug);
-                dto.setDescription(description);
-                dto.setCategoryId(category.getId());
-
-                dto.setImageFile(null);
-
-                productService.create(dto);
-
-                System.out.printf("Продукт %d: %s (%s)%n", i + 1, name, category.getName());
-            } catch (Exception e) {
-                System.out.println("Помилка при створенні продукту: " + e.getMessage());
-                i--;
+            var categories = categoryService.getAll();
+            if (categories.isEmpty()) {
+                System.out.println("Пропускаю продукти — немає категорій.");
+                return;
             }
+
+            long existingCount = categoryService.getAll().size();
+            if (existingCount >= targetCount) {
+                System.out.println("Продукти вже існують, сід пропущено.");
+                return;
+            }
+
+            System.out.println("Починаю створювати " + targetCount + " продуктів...");
+
+            for (int i = 0; i < targetCount; i++) {
+                try {
+                    String name = faker.commerce().productName();
+                    String slug = slugify.slugify(name);
+                    String description = faker.lorem().sentence(10);
+
+                    var category = categories.get(random.nextInt(categories.size()));
+
+                    var dto = new org.example.data.data_transfer_objects.product.ProductCreateDTO();
+                    dto.setName(name);
+                    dto.setSlug(slug);
+                    dto.setDescription(description);
+                    dto.setCategoryId(category.getId());
+
+                    dto.setImageFile(null);
+
+                    productService.create(dto);
+
+                    System.out.printf("Продукт %d: %s (%s)%n", i + 1, name, category.getName());
+                } catch (Exception e) {
+                    System.out.println("Помилка при створенні продукту: " + e.getMessage());
+                    i--;
+                }
+            }
+
+            System.out.println("Сід продуктів завершено!");
         }
 
-        System.out.println("Сід продуктів завершено!");
     }
 
 }

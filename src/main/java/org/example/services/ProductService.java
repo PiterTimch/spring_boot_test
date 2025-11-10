@@ -41,9 +41,11 @@ public class ProductService {
         return productMapper.toDTO(entity);
     }
 
+    @Transactional
     public List<ProductItemDTO> getAll() {
         return productRepository.findAll()
                 .stream()
+                .filter(x -> !x.isDeleted())
                 .map(productMapper::toDTO)
                 .toList();
     }

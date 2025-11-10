@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="uk"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout}">
+<head>
+    <title>Список товарів</title>
+</head>
+<body>
+<div layout:fragment="content" class="flex flex-col items-center">
+    <h1 class="text-3xl font-bold mb-6 text-green-700">Список товарів</h1>
+
+    <div class="overflow-x-auto w-full max-w-4xl bg-green-50 shadow-md rounded-xl border border-green-200">
+        <table class="min-w-full text-left text-gray-800">
+            <thead>
+            <tr class="bg-gradient-to-r from-green-400 to-emerald-500 text-white">
+                <th class="px-6 py-3 text-sm font-semibold tracking-wider uppercase rounded-tl-xl">ID</th>
+                <th class="px-6 py-3 text-sm font-semibold tracking-wider uppercase">Назва</th>
+                <th class="px-6 py-3 text-sm font-semibold tracking-wider uppercase">Slug</th>
+                <th class="px-6 py-3 text-sm font-semibold tracking-wider uppercase">Опис</th>
+                <th class="px-6 py-3 text-sm font-semibold tracking-wider uppercase">Категорія</th>
+                <th class="px-6 py-3 text-sm font-semibold tracking-wider uppercase rounded-tr-xl">Зображення</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-green-200">
+            <tr th:each="product : ${products}"
+                class="hover:bg-green-100 transition duration-200">
+                <td class="px-6 py-3" th:text="${product.id}"></td>
+                <td class="px-6 py-3 font-medium text-green-800" th:text="${product.name}"></td>
+                <td class="px-6 py-3 font-medium text-green-800" th:text="${product.slug}"></td>
+                <td class="px-6 py-3 font-medium text-green-800" th:text="${product.description}"></td>
+                <td class="px-6 py-3 font-medium text-green-800" th:text="${product.categoryName}"></td>
+                <td class="px-6 py-3 text-center">
+                    <img th:if="${product.image != null}"
+                         th:src="@{'/'+${uploadDir}+'/medium/' + ${product.image}}"
+                         alt="Product Image"
+                         class="mx-auto w-20 h-20 rounded-xl object-cover ring-2 ring-green-300 shadow-sm">
+                    <span th:if="${product.image == null}" class="text-gray-400">—</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
