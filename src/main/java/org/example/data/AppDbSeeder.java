@@ -9,6 +9,7 @@ import org.example.data.data_transfer_objects.product.CategoryItemDTO;
 import org.example.entities.account.RoleEntity;
 import org.example.repository.IRoleRepository;
 import org.example.services.CategoryService;
+import org.example.services.FileService;
 import org.example.services.ProductService;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,7 @@ public class AppDbSeeder {
             .locale(Locale.forLanguageTag("uk"))
             .transliterator(true)
             .build();
+    private final FileService fileService;
 
     @PostConstruct
     public void seedData() {
@@ -110,6 +112,7 @@ public class AppDbSeeder {
                 dto.setSlug(slug);
                 dto.setDescription(description);
                 dto.setCategoryId(category.getId());
+
                 dto.setImageFile(null);
 
                 productService.create(dto);

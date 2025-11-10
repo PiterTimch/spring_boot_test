@@ -31,6 +31,9 @@ public class ProductService {
         if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
             imageFileName = fileService.load(dto.getImageFile());
         }
+        else {
+            imageFileName = fileService.load("https://loremflickr.com/800/600");
+        }
 
         ProductEntity entity = productMapper.fromCreateDTO(dto, category, imageFileName);
         productRepository.save(entity);
