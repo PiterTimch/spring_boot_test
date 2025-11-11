@@ -6,11 +6,14 @@ import org.example.data.data_transfer_objects.product.ProductCreateDTO;
 import org.example.data.data_transfer_objects.product.ProductItemDTO;
 import org.example.data.mappers.ProductMapper;
 import org.example.entities.product.CategoryEntity;
+import org.example.entities.product.ImageEntity;
 import org.example.entities.product.ProductEntity;
 import org.example.repository.ICategoryRepository;
 import org.example.repository.IProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,15 +30,32 @@ public class ProductService {
         CategoryEntity category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Категорію не знайдено"));
 
-        String imageFileName = null;
-        if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
-            imageFileName = fileService.load(dto.getImageFile());
-        }
-        else {
-            imageFileName = fileService.load("https://loremflickr.com/800/600");
+        ProductEntity entity = productMapper.fromCreateDTO(dto, category);
+
+        List<ImageEntity> imageEntities = new ArrayList<>();
+
+        if (dto.getImageFiles() != null && !dto.getImageFiles().isEmpty()) {
+            short priority = 0;
+            for (MultipartFile file : dto.getImageFiles()) {
+                String fileName = fileService.load(file);
+
+                ImageEntity image = new ImageEntity();
+                image.setName(fileName);
+                image.setPriority(priority++);
+                image.setProduct(entity);
+
+                imageEntities.add(image);
+            }
+        } else {
+            String fallbackName = fileService.load("https://loremflickr.com/800/600");
+            ImageEntity image = new ImageEntity();
+            image.setName(fallbackName);
+            image.setPriority((short) 0);
+            image.setProduct(entity);
+            imageEntities.add(image);
         }
 
-        ProductEntity entity = productMapper.fromCreateDTO(dto, category, imageFileName);
+        entity.setImages(imageEntities);
         productRepository.save(entity);
 
         return productMapper.toDTO(entity);

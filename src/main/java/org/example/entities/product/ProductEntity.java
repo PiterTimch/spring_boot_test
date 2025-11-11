@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -22,8 +24,8 @@ public class ProductEntity {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = true, length = 200)
-    private String image;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImageEntity> images;
 
     @Column(nullable = false)
     private boolean isDeleted;

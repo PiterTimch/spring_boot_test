@@ -114,7 +114,7 @@ public class AppDbSeeder {
                     dto.setDescription(description);
                     dto.setCategoryId(category.getId());
 
-                    dto.setImageFile(null);
+                    dto.setImageFiles(null);
 
                     productService.create(dto);
 

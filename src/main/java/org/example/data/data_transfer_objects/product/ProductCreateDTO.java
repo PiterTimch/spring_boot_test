@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ProductCreateDTO {
@@ -17,9 +19,9 @@ public class ProductCreateDTO {
     @NotBlank(message = "Опис обов'язковий")
     private String description;
 
-    private MultipartFile imageFile;
+    private List<MultipartFile> imageFiles;
 
     @NotBlank(message = "Категорія обов'язкова")
     private Long categoryId;
-
 }
+
