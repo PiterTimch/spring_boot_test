@@ -113,6 +113,7 @@ public class AppDbSeeder {
                     dto.setSlug(slug);
                     dto.setDescription(description);
                     dto.setCategoryId(category.getId());
+                    dto.setPrice(faker.number().randomDouble(2, 100, 2000));
 
                     dto.setImageFiles(null);
 

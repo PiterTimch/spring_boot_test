@@ -16,6 +16,9 @@ public class ProductCreateDTO {
     @NotBlank(message = "Slug обов'язковий")
     private String slug;
 
+    @NotBlank(message = "Slug обов'язковий")
+    private double price;
+
     @NotBlank(message = "Опис обов'язковий")
     private String description;
 

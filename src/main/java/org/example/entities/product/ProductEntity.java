@@ -28,6 +28,9 @@ public class ProductEntity {
     private List<ImageEntity> images;
 
     @Column(nullable = false)
+    public double price;
+
+    @Column(nullable = false)
     private boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
