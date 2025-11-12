@@ -1,0 +1,20 @@
+<div th:fragment="productCard(product)" th:if="${product != null}"
+     class="bg-white rounded-xl shadow-md border border-green-200 p-4 w-72 hover:shadow-lg transition transform hover:-translate-y-1">
+    <div class="flex flex-col items-center">
+        <div class="w-48 h-48 mb-3 flex justify-center items-center bg-green-50 rounded-lg overflow-hidden">
+            <div th:if="${product.images != null && !product.images.isEmpty()}">
+                <img th:src="@{'/' + ${uploadDir} + '/medium/' + ${product.images[0]}}"
+                     alt="Product Image"
+                     class="w-full h-full object-cover">
+            </div>
+            <div th:if="${product.images == null or product.images.isEmpty()}">
+                <span class="text-gray-400">Немає фото</span>
+            </div>
+        </div>
+
+        <h2 class="text-lg font-bold text-green-700 mb-1" th:text="${product.name}">Назва товару</h2>
+        <p class="text-sm text-gray-600 italic mb-2" th:text="'Категорія: ' + ${product.categoryName}"></p>
+        <p class="text-sm text-gray-700 text-center mb-2" th:text="${product.description}"></p>
+        <p class="text-xs text-gray-400">Slug: <span th:text="${product.slug}"></span></p>
+    </div>
+</div>

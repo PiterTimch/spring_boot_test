@@ -2,6 +2,7 @@ package org.example.data;
 
 import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
+import com.ibm.icu.text.Transliterator;
 import lombok.RequiredArgsConstructor;
 import org.example.data.constants.RolesConstants;
 import org.example.data.data_transfer_objects.product.CategoryCreateDTO;
@@ -67,7 +68,9 @@ public class AppDbSeeder {
 
         for (int i = 0; i < targetCount; i++) {
             String name = faker.commerce().department();
-            String slug = slugify.slugify(name);
+            Transliterator transliterator = Transliterator.getInstance("Cyrillic-Latin");
+            String latinText = transliterator.transliterate(name);
+            String slug = slugify.slugify(latinText);
 
             try {
                 CategoryCreateDTO dto = new CategoryCreateDTO();
@@ -103,7 +106,9 @@ public class AppDbSeeder {
             for (int i = 0; i < targetCount; i++) {
                 try {
                     String name = faker.commerce().productName();
-                    String slug = slugify.slugify(name);
+                    Transliterator transliterator = Transliterator.getInstance("Cyrillic-Latin");
+                    String latinText = transliterator.transliterate(name);
+                    String slug = slugify.slugify(latinText);
                     String description = faker.lorem().sentence(10);
 
                     var category = categories.get(random.nextInt(categories.size()));
