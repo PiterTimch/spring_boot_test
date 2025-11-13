@@ -87,7 +87,7 @@
 
     <div th:if="${page != null}" class="mt-8 flex flex-col items-center gap-4">
         <div class="flex items-center gap-2">
-            <a th:href="@{/products/list(page=${page.currentPage - 1}, size=${page.pageSize})}"
+            <a th:href="@{/products/list(page=${page.currentPage}, size=${page.pageSize})}"
                th:if="${page.hasPrevious}"
                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
                 ← Попередня
@@ -98,7 +98,7 @@
             </span>
 
             <div class="flex gap-2">
-                <a th:href="@{/products/list(page=0, size=${page.pageSize})}"
+                <a th:href="@{/products/list(page=1, size=${page.pageSize})}"
                    th:class="${0 == page.currentPage} ?
                              'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
                              'px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-semibold'"
@@ -115,7 +115,7 @@
                     T(java.lang.Math).max(1, page.currentPage - 1),
                     T(java.lang.Math).min(page.totalPages - 2, page.currentPage + 1)
                 )}">
-                    <a th:href="@{/products/list(page=${pageNum}, size=${page.pageSize})}"
+                    <a th:href="@{/products/list(page=${pageNum + 1}, size=${page.pageSize})}"
                        th:class="${pageNum == page.currentPage} ?
                                  'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
                                  'px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-semibold'"
@@ -139,7 +139,7 @@
                 </a>
             </div>
 
-            <a th:href="@{/products/list(page=${page.currentPage + 1}, size=${page.pageSize})}"
+            <a th:href="@{/products/list(page=${page.currentPage + 2}, size=${page.pageSize})}"
                th:if="${page.hasNext}"
                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
                 Наступна →

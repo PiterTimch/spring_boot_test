@@ -27,7 +27,7 @@ public class ProductsController {
 
     @GetMapping("/list")
     public String listUsers(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "12") int size,
             Model model) {
         PageResponseDTO<ProductListItemDTO> pageResponse = productService.getAllPaginated(page, size);

@@ -77,7 +77,7 @@ public class ProductService {
 
     @Transactional()
     public PageResponseDTO<ProductListItemDTO> getAllPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page-1, size);
         Page<ProductEntity> productPage = productRepository.findAll(pageable);
         
         List<ProductListItemDTO> content = productPage.getContent()
@@ -86,7 +86,7 @@ public class ProductService {
                 .toList();
         
         PageDTO pageDTO = PageDTO.builder()
-                .currentPage(productPage.getNumber())
+                .currentPage(page-1)
                 .totalPages(productPage.getTotalPages())
                 .totalElements(productPage.getTotalElements())
                 .pageSize(productPage.getSize())
