@@ -34,30 +34,27 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div th:each="product : ${products}">
             <div th:if="${product != null}"
-                 class="bg-white h-80 rounded-3xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 hover:scale-105 w-72 flex flex-col overflow-hidden">
+                 class="bg-white h-100 rounded-3xl shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 hover:scale-105 w-72 flex flex-col overflow-hidden">
 
                 <div class="w-full aspect-[4/3] bg-green-50 flex items-center justify-center overflow-hidden">
                     <div th:if="${product.image != null}">
                         <img th:src="@{'/' + ${uploadDir} + '/medium/' + ${product.image}}"
                              th:alt="${product.name} + ' image'"
-                             class="w-full h-full object-cover"/>
-                    </div>
-                    <div th:if="${product.image == null}" class="text-gray-400 text-sm text-center">
-                        Немає фото
+                             class="w-full h-40 object-cover"/>
                     </div>
                 </div>
 
                 <div class="p-4 flex flex-col flex-1 justify-between">
                     <div class="flex flex-col items-center flex-1">
-                        <h2 class="text-lg font-semibold text-gray-800 text-center mb-1 truncate"
+                        <h2 class="text-lg font-semibold text-gray-800 line-clamp-1 text-center mb-1"
                             th:text="${product.name} ?: 'Без назви'">Назва товару</h2>
 
                         <span th:text="${product.categoryName} != null ? ${product.categoryName} : '—'"
                               class="text-xs font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full mb-2">
-                    Категорія
-                </span>
+                            Категорія
+                        </span>
 
-                        <p class="text-gray-500 text-sm text-center mb-4 line-clamp-3 overflow-hidden"
+                        <p class="text-gray-500 text-sm text-center mb-4 line-clamp-1 overflow-hidden"
                            th:text="${product.description} ?: 'Опис відсутній'">
                             Опис товару
                         </p>
@@ -90,7 +87,6 @@
 
     <div th:if="${page != null}" class="mt-8 flex flex-col items-center gap-4">
         <div class="flex items-center gap-2">
-            <!-- Кнопка "Попередня" -->
             <a th:href="@{/products/list(page=${page.currentPage - 1}, size=${page.pageSize})}"
                th:if="${page.hasPrevious}"
                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
@@ -102,7 +98,6 @@
             </span>
 
             <div class="flex gap-2">
-                <!-- Перша сторінка -->
                 <a th:href="@{/products/list(page=0, size=${page.pageSize})}"
                    th:class="${0 == page.currentPage} ?
                              'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
@@ -111,13 +106,11 @@
                     1
                 </a>
 
-                <!-- Крапки після першої сторінки, якщо потрібно -->
                 <span th:if="${page.currentPage > 2}"
                       class="px-2 py-2 text-gray-500">
                     ...
                 </span>
 
-                <!-- Сторінки навколо поточної -->
                 <th:block th:each="pageNum : ${#numbers.sequence(
                     T(java.lang.Math).max(1, page.currentPage - 1),
                     T(java.lang.Math).min(page.totalPages - 2, page.currentPage + 1)
@@ -131,13 +124,11 @@
                     </a>
                 </th:block>
 
-                <!-- Крапки перед останньою сторінкою, якщо потрібно -->
                 <span th:if="${page.currentPage < page.totalPages - 3}"
                       class="px-2 py-2 text-gray-500">
                     ...
                 </span>
 
-                <!-- Остання сторінка (якщо є більше 1 сторінки) -->
                 <a th:if="${page.totalPages > 1}"
                    th:href="@{/products/list(page=${page.totalPages - 1}, size=${page.pageSize})}"
                    th:class="${(page.totalPages - 1) == page.currentPage} ?
@@ -160,7 +151,8 @@
         </div>
 
         <div class="text-sm text-gray-600">
-            <span>Сторінка <span th:text="${page.currentPage + 1}">1</span> з <span th:text="${page.totalPages}">1</span></span>
+            <span>Сторінка <span th:text="${page.currentPage + 1}">1</span> з <span
+                    th:text="${page.totalPages}">1</span></span>
             <span class="mx-2">|</span>
             <span>Всього товарів: <span th:text="${page.totalElements}">0</span></span>
             <span class="mx-2">|</span>
