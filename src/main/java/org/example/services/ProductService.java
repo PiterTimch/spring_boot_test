@@ -2,6 +2,8 @@ package org.example.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.data.data_transfer_objects.common.PageDTO;
+import org.example.data.data_transfer_objects.common.PageResponseDTO;
 import org.example.data.data_transfer_objects.product.ProductCreateDTO;
 import org.example.data.data_transfer_objects.product.ProductItemDTO;
 import org.example.data.data_transfer_objects.product.ProductListItemDTO;
@@ -11,6 +13,9 @@ import org.example.entities.product.ImageEntity;
 import org.example.entities.product.ProductEntity;
 import org.example.repository.ICategoryRepository;
 import org.example.repository.IProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,6 +73,33 @@ public class ProductService {
                 .stream()
                 .map(productMapper::toListItemDTO)
                 .toList();
+    }
+
+    @Transactional()
+    public PageResponseDTO<ProductListItemDTO> getAllPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductEntity> productPage = productRepository.findAll(pageable);
+        
+        List<ProductListItemDTO> content = productPage.getContent()
+                .stream()
+                .map(productMapper::toListItemDTO)
+                .toList();
+        
+        PageDTO pageDTO = PageDTO.builder()
+                .currentPage(productPage.getNumber())
+                .totalPages(productPage.getTotalPages())
+                .totalElements(productPage.getTotalElements())
+                .pageSize(productPage.getSize())
+                .hasNext(productPage.hasNext())
+                .hasPrevious(productPage.hasPrevious())
+                .isFirst(productPage.isFirst())
+                .isLast(productPage.isLast())
+                .build();
+        
+        return PageResponseDTO.<ProductListItemDTO>builder()
+                .content(content)
+                .page(pageDTO)
+                .build();
     }
 
 }

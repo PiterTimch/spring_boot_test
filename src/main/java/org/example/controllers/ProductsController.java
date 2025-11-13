@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.data.data_transfer_objects.account.ForgotPasswordDTO;
 import org.example.data.data_transfer_objects.account.RegisterUserDTO;
 import org.example.data.data_transfer_objects.account.ResetPasswordDTO;
+import org.example.data.data_transfer_objects.common.PageResponseDTO;
 import org.example.data.data_transfer_objects.product.ProductItemDTO;
 import org.example.data.data_transfer_objects.product.ProductListItemDTO;
 import org.example.services.AccountService;
@@ -25,9 +26,13 @@ public class ProductsController {
     private final ProductService productService;
 
     @GetMapping("/list")
-    public String listUsers(Model model) {
-        List<ProductListItemDTO> products = productService.getAll();
-        model.addAttribute("products", products);
+    public String listUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            Model model) {
+        PageResponseDTO<ProductListItemDTO> pageResponse = productService.getAllPaginated(page, size);
+        model.addAttribute("products", pageResponse.getContent());
+        model.addAttribute("page", pageResponse.getPage());
         return "products/list";
     }
 }
