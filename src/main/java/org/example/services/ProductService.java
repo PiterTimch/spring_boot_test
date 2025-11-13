@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.data.data_transfer_objects.product.ProductCreateDTO;
 import org.example.data.data_transfer_objects.product.ProductItemDTO;
+import org.example.data.data_transfer_objects.product.ProductListItemDTO;
 import org.example.data.mappers.ProductMapper;
 import org.example.entities.product.CategoryEntity;
 import org.example.entities.product.ImageEntity;
@@ -62,11 +63,11 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductItemDTO> getAll() {
+    public List<ProductListItemDTO> getAll() {
         return productRepository.findAll()
                 .stream()
-                .filter(x -> !x.isDeleted())
-                .map(productMapper::toDTO)
+                .map(productMapper::toListItemDTO)
                 .toList();
     }
+
 }

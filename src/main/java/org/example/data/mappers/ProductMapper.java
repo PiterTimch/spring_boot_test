@@ -2,6 +2,7 @@ package org.example.data.mappers;
 
 import org.example.data.data_transfer_objects.product.ProductCreateDTO;
 import org.example.data.data_transfer_objects.product.ProductItemDTO;
+import org.example.data.data_transfer_objects.product.ProductListItemDTO;
 import org.example.entities.product.CategoryEntity;
 import org.example.entities.product.ProductEntity;
 import org.mapstruct.*;
@@ -27,5 +28,9 @@ public interface ProductMapper {
                                 @Context CategoryEntity category) {
         entity.setCategory(category);
     }
+
+    @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(target = "image", expression = "java(entity.getImages() != null && !entity.getImages().isEmpty() ? entity.getImages().get(0).getName() : null)")
+    ProductListItemDTO toListItemDTO(ProductEntity entity);
 }
 
