@@ -86,69 +86,88 @@
     </div>
 
     <div th:if="${page != null}" class="mt-8 flex flex-col items-center gap-4">
-        <div class="flex items-center gap-2">
-            <a th:href="@{/products/list(page=${page.currentPage}, size=${page.pageSize})}"
-               th:if="${page.hasPrevious}"
-               class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
-                ← Попередня
-            </a>
-            <span th:unless="${page.hasPrevious}"
-                  class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed">
+        <th:block th:if="${page.totalPages == 2}">
+            <div class="flex items-center flex-row">
+                <a th:href="@{/products/list(page=1, size=${page.pageSize})}"
+                   th:class="${page.currentPage == 0} ?
+                      'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
+                      'px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-semibold'">
+                    1
+                </a>
+                <a th:href="@{/products/list(page=2, size=${page.pageSize})}"
+                   th:class="${page.currentPage == 1} ?
+                      'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
+                      'px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-semibold'">
+                    2
+                </a>
+            </div>
+        </th:block>
+
+        <th:block th:unless="${page.totalPages == 2}">
+            <div class="flex items-center gap-2">
+                <a th:href="@{/products/list(page=${page.currentPage}, size=${page.pageSize})}"
+                   th:if="${page.hasPrevious}"
+                   class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
+                    ← Попередня
+                </a>
+                <span th:unless="${page.hasPrevious}"
+                      class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed">
                 ← Попередня
             </span>
 
-            <div class="flex gap-2">
-                <a th:href="@{/products/list(page=1, size=${page.pageSize})}"
-                   th:class="${0 == page.currentPage} ?
+                <div class="flex gap-2">
+                    <a th:href="@{/products/list(page=1, size=${page.pageSize})}"
+                       th:class="${0 == page.currentPage} ?
                              'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
                              'px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-semibold'"
-                   th:text="1">
-                    1
-                </a>
+                       th:text="1">
+                        1
+                    </a>
 
-                <span th:if="${page.currentPage > 2}"
-                      class="px-2 py-2 text-gray-500">
+                    <span th:if="${page.currentPage > 2}"
+                          class="px-2 py-2 text-gray-500">
                     ...
                 </span>
 
-                <th:block th:each="pageNum : ${#numbers.sequence(
+                    <th:block th:each="pageNum : ${#numbers.sequence(
                     T(java.lang.Math).max(1, page.currentPage - 1),
                     T(java.lang.Math).min(page.totalPages - 2, page.currentPage + 1)
                 )}">
-                    <a th:href="@{/products/list(page=${pageNum + 1}, size=${page.pageSize})}"
-                       th:class="${pageNum == page.currentPage} ?
+                        <a th:href="@{/products/list(page=${pageNum + 1}, size=${page.pageSize})}"
+                           th:class="${pageNum == page.currentPage} ?
                                  'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
                                  'px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-semibold'"
-                       th:text="${pageNum + 1}">
-                        [[${pageNum + 1}]]
-                    </a>
-                </th:block>
+                           th:text="${pageNum + 1}">
+                            [[${pageNum + 1}]]
+                        </a>
+                    </th:block>
 
-                <span th:if="${page.currentPage < page.totalPages - 3}"
-                      class="px-2 py-2 text-gray-500">
+                    <span th:if="${page.currentPage < page.totalPages - 3}"
+                          class="px-2 py-2 text-gray-500">
                     ...
                 </span>
 
-                <a th:if="${page.totalPages > 1}"
-                   th:href="@{/products/list(page=${page.totalPages - 1}, size=${page.pageSize})}"
-                   th:class="${(page.totalPages - 1) == page.currentPage} ?
+                    <a th:if="${page.totalPages > 1}"
+                       th:href="@{/products/list(page=${page.totalPages}, size=${page.pageSize})}"
+                       th:class="${(page.totalPages - 1) == page.currentPage} ?
                              'px-4 py-2 bg-green-600 text-white rounded-lg font-semibold' :
                              'px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-semibold'"
-                   th:text="${page.totalPages}">
-                    [[${page.totalPages}]]
-                </a>
-            </div>
+                       th:text="${page.totalPages}">
+                        [[${page.totalPages}]]
+                    </a>
+                </div>
 
-            <a th:href="@{/products/list(page=${page.currentPage + 2}, size=${page.pageSize})}"
-               th:if="${page.hasNext}"
-               class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
-                Наступна →
-            </a>
-            <span th:unless="${page.hasNext}"
-                  class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed">
-                Наступна →
-            </span>
-        </div>
+                <a th:href="@{/products/list(page=${page.currentPage + 2}, size=${page.pageSize})}"
+                   th:if="${page.hasNext}"
+                   class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold">
+                    Наступна →
+                </a>
+                <span th:unless="${page.hasNext}"
+                      class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed">
+                    Наступна →
+                </span>
+            </div>
+        </th:block>
 
         <div class="text-sm text-gray-600">
             <span>Сторінка <span th:text="${page.currentPage + 1}">1</span> з <span
