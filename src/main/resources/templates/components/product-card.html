@@ -28,6 +28,10 @@
                        th:text="${product.description} ?: 'Опис відсутній'">
                         Опис товару
                     </p>
+                    <p class="text-gray-500 text-sm text-center mb-4 line-clamp-1 overflow-hidden"
+                       th:text="${product.price} ?: 'Греби усе'">
+                        Ціна
+                    </p>
                 </div>
 
                 <div class="flex gap-2 mt-2">

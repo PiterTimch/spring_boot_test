@@ -9,16 +9,33 @@
 </head>
 <body>
 <div layout:fragment="content" class="flex flex-col items-center">
+
     <h1 class="text-3xl font-bold mb-6 text-green-700">Список товарів</h1>
 
+    <th:block th:replace="components/product-search :: productSearchFragment"></th:block>
+
+    <th:block th:with="
+    paramName=${search.name != null} ? '&name=' + ${search.name} : '',
+    paramSlug=${search.slug != null} ? '&slug=' + ${search.slug} : '',
+    paramDesc=${search.description != null} ? '&description=' + ${search.description} : '',
+    paramMin=${search.minPrice != null} ? '&minPrice=' + ${search.minPrice} : '',
+    paramMax=${search.maxPrice != null} ? '&maxPrice=' + ${search.maxPrice} : '',
+    paramCat=${search.categoryId != null} ? '&categoryId=' + ${search.categoryId} : '',
+    params=${paramName + paramSlug + paramDesc + paramMin + paramMax + paramCat}
+    ">
+
+
+
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <th:block th:each="product : ${products}">
-            <th:block th:replace="components/product-card :: productCard(product=${product}, uploadDir=${uploadDir})"></th:block>
-        </th:block>
+            <th:block th:each="product : ${products}">
+                <th:block th:replace="components/product-card :: productCard(product=${product}, uploadDir=${uploadDir})"></th:block>
+            </th:block>
+        </div>
 
-    </div>
+        <th:block th:replace="components/pagination :: pagination(page=${page}, params=${params})"></th:block>
 
-    <th:block th:replace="components/pagination :: pagination(page=${page})"></th:block>
+    </th:block>
+
 </div>
 </body>
 </html>

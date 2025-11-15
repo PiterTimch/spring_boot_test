@@ -7,15 +7,18 @@ import org.example.data.data_transfer_objects.common.PageResponseDTO;
 import org.example.data.data_transfer_objects.product.ProductCreateDTO;
 import org.example.data.data_transfer_objects.product.ProductItemDTO;
 import org.example.data.data_transfer_objects.product.ProductListItemDTO;
+import org.example.data.data_transfer_objects.search.ProductSearchDTO;
 import org.example.data.mappers.ProductMapper;
 import org.example.entities.product.CategoryEntity;
 import org.example.entities.product.ImageEntity;
 import org.example.entities.product.ProductEntity;
 import org.example.repository.ICategoryRepository;
 import org.example.repository.IProductRepository;
+import org.example.specifications.ProductSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,18 +78,23 @@ public class ProductService {
                 .toList();
     }
 
-    @Transactional()
-    public PageResponseDTO<ProductListItemDTO> getAllPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page-1, size);
-        Page<ProductEntity> productPage = productRepository.findAll(pageable);
-        
+    @Transactional
+    public PageResponseDTO<ProductListItemDTO> getAllPaginated(
+            int page, int size, ProductSearchDTO searchDTO) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Specification<ProductEntity> spec = ProductSpecifications.search(searchDTO);
+
+        Page<ProductEntity> productPage = productRepository.findAll(spec, pageable);
+
         List<ProductListItemDTO> content = productPage.getContent()
                 .stream()
                 .map(productMapper::toListItemDTO)
                 .toList();
-        
+
         PageDTO pageDTO = PageDTO.builder()
-                .currentPage(page-1)
+                .currentPage(page - 1)
                 .totalPages(productPage.getTotalPages())
                 .totalElements(productPage.getTotalElements())
                 .pageSize(productPage.getSize())
@@ -95,11 +103,12 @@ public class ProductService {
                 .isFirst(productPage.isFirst())
                 .isLast(productPage.isLast())
                 .build();
-        
+
         return PageResponseDTO.<ProductListItemDTO>builder()
                 .content(content)
                 .page(pageDTO)
                 .build();
     }
+
 
 }

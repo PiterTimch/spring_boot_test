@@ -15,6 +15,8 @@ public class ProductItemDTO {
 
     private List<String> images;
 
+    public double price;
+
     private boolean isDeleted;
     private String categoryName;
     private Long categoryId;
